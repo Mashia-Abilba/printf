@@ -12,9 +12,8 @@ int (*get_func(char x))(va_list args);
 
 /**
  * struct - A new struct type defining conversion_specifier.
- * @specifier: A letter specifing the format/datatype of the data to be printed 
- * @print_fn: A function pointer to a function that prints
- *         a data type corresponding to the specifier.
+ * @specifier: A letter specifing the format/datatype
+ * @print_fn: A function pointer to a function that prin
  */
 typedef struct specifier
 {
