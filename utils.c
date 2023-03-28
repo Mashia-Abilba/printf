@@ -76,6 +76,9 @@ long int convert_size_number(long int num, int size)
 
 long int_convert_size_unsgned(unsigned long int num, int size)
 {
+	unsigned S_LONG;
+	unsigned S_SHORT;
+
 	if (size == S_LONG)
 		return (num);
 	else if (size == S_SHORT)
