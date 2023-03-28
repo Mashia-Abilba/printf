@@ -2,90 +2,50 @@
 #include <stdarg.h>
 #include <main.h>
 
-int print_char(va_list args);
-int print_str(va_list args);
-
 /**
- * print_char - Prints a character.
- * @args: A va_list holding the character to be printed.
- *
- * Return: 1 always.
- */
-int print_char(va_list args)
-{
-	char c;
-
-	c = va_arg(args, int);
-	putchar(c);
-	return (1);
-}
-
-/**
- * print_str - Prints a string.
- * @args: A v_list holding the string to be printed.
- *
- * Return: The number of char in the string.
- */
-
-int print_str(va_list args)
-{
-	char *s;
-	int count = 0;
-
-	s = va_arg(args, char *);
-
-	while (*s)
-	{
-		putchar(*s);
-		s++;
-		count++;
-	}
-	return (count);
-}
-
-/**
- * _printf - Produces output according to a format.
- * @format: The format in which output is to be produced.
- *
- * Return: 0 on success, somethingelse otherwise.
+ * _printf - recreates the printf function
+ * @format: string with format specifier
+ * Return: number of characters printed
  */
 int _printf(const char *format, ...)
 {
-	conversion_specifier conv_table[] = {
-		{'c', &print_char},
-		{'s', &print_str},
-		{'%', NULL}
-	};
-	conversion_specifier *specifier = NULL;
-	int count = 0, i;
-	va_list args;
-
-	va_start(args, format);
-
-	while (*format)
+	if (format != NULL)
 	{
-		if (*format == '%')
+		int count = 0, i;
+		int (*m)(va_list);
+		va_list args;
+
+		va_start(args, format);
+		i = 0;
+		if (format[0] == '%' && format[1] == '\0')
+			return (-1);
+		while (format != NULL && format[i] != '\0')
 		{
-			format++;
-			for (i = 0; i < sizeof(conv_table) / sizeof(conv_table[0]); i++)
+			if (format[i] == '%')
 			{
-				if (*format == conv_table[i].specifier)
+				if (format[i + 1] == '%')
 				{
-					specifier = &conv_table[i];
-					break;
+					count += _putchar(format[i]);
+					i += 2;
+				}
+				else
+				{
+					m = get_func(format[i + 1]);
+					if (m)
+						count += m(args);
+					else
+						count = _putchar(format[i]) + _putchar(format[i + 1]);
+					i += 2;
 				}
 			}
-			if (specifier == NULL)
-			{
-				count += print_char('%');
-				count += print_char(*format);
-			}
 			else
-				count += specifier->print_fn(args);
+			{
+				count += _putchar(format[i]);
+				i++;
+			}
 		}
-		else
-			count += print_char(*format);
-		format++;
+		va_end(args);
+		return (count);
 	}
-	va_end(args);
-	return (count);
+	return (-1);
+}

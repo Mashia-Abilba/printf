@@ -3,6 +3,7 @@
 #include <stdarg.h>
 
 int _printf(const char *format, ...);
+int _putchar(char c);
 
 /**
  * struct - A new struct type defining conversion_specifier.
